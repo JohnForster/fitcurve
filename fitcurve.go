@@ -1,7 +1,5 @@
 package fitcurve
 
-import "fmt"
-
 func FitCurve(points []Point, tolerance float64) []Bezier {
 
 	// Filter duplicate points
@@ -39,8 +37,7 @@ func createTangent(p0 Point, p1 Point) Vec2 {
 	return v.Normalize()
 }
 
-func fitCubic(points []Point, leftTangent Vec2, rightTangent Vec2, target_error float64) []Bezier {
-
+func fitCubic(points []Point, leftTangent Vec2, rightTangent Vec2, targetError float64) []Bezier {
 	// Use heuristic if region only has two points
 	if len(points) == 2 {
 		p0, p1 := points[0], points[1]
@@ -54,26 +51,22 @@ func fitCubic(points []Point, leftTangent Vec2, rightTangent Vec2, target_error 
 	}
 
 	params := chordLengthParameterize(points)
-	bezier, maxError, splitPoint := generate(points, params, params, leftTangent, rightTangent)
-	fmt.Printf("bezier: %v\n", bezier)
-	fmt.Printf("maxError: %v\n", maxError)
-	fmt.Printf("splitPoint: %v\n", splitPoint)
-	panic("Test here")
 
-	// fmt.Printf("maxError: %v, target_error: %v\n", maxError, target_error)
-	if maxError == 0.0 || maxError < target_error {
+	bezier, maxError, splitPoint := generate(points, params, params, leftTangent, rightTangent)
+
+	if maxError == 0.0 || maxError < targetError {
 		return []Bezier{bezier}
 	}
 
 	// If maxError is relatively close, try reparameterization and iteration
-	if maxError < target_error*target_error {
+	if maxError < targetError*targetError {
 		const MAX_ITERATIONS int = 20
 		newParams, prevSplit, prevErr := params, splitPoint, maxError
 		for i := 0; i < MAX_ITERATIONS; i++ {
-			newParams := reparameterize(bezier, points, newParams)
-			bezier, maxError, splitPoint := generate(points, params, newParams, leftTangent, rightTangent)
+			newParams = reparameterize(bezier, points, newParams)
+			bezier, maxError, splitPoint = generate(points, params, newParams, leftTangent, rightTangent)
 
-			if maxError < target_error {
+			if maxError < targetError {
 				return []Bezier{bezier}
 			} else
 			// If the development of the fitted curve grinds to a halt,
@@ -110,8 +103,8 @@ func fitCubic(points []Point, leftTangent Vec2, rightTangent Vec2, target_error 
 	toCenterTangent := centerVector.Normalize()
 	fromCenterTangent := toCenterTangent.Mult(-1)
 
-	beziers = append(beziers, fitCubic(points[0:splitPoint+1], leftTangent, toCenterTangent, target_error)...)
-	beziers = append(beziers, fitCubic(points[splitPoint:], leftTangent, fromCenterTangent, target_error)...)
+	beziers = append(beziers, fitCubic(points[0:splitPoint+1], leftTangent, toCenterTangent, targetError)...)
+	beziers = append(beziers, fitCubic(points[splitPoint:], fromCenterTangent, rightTangent, targetError)...)
 
 	return beziers
 }
@@ -145,11 +138,6 @@ func chordLengthParameterize(points []Point) []float64 {
 
 func generate(points []Point, params0 []float64, params1 []float64, lt Vec2, rt Vec2) (Bezier, float64, int) {
 	bezier := generateBezier(points, params1, lt, rt)
-
-	// fmt.Printf("lt: %v\n", lt)
-	// fmt.Printf("rt: %v\n", rt)
-	// fmt.Printf("bezCurve: %v\n", bezier)
-	// fmt.Printf("params0: %v\n", params0)
 	// Find max deviation of points to fitted curve.
 	// Here we always use original params because we need to
 	// compare the current curve to the source polyline.
@@ -199,11 +187,13 @@ func generateBezier(points []Point, params []float64, lt Vec2, rt Vec2) Bezier {
 		C[1][1] += a[1].Dot(a[1])
 
 		straightLine := Bezier{p0: firstPoint, c1: firstPoint, c2: lastPoint, p1: lastPoint}
+
 		// Difference between actual point location and a straight line at point u
 		tmp := points[i].Subtract(straightLine.Q(u))
 
 		X[0] += a[0].Dot(tmp)
 		X[1] += a[1].Dot(tmp)
+
 	}
 
 	// Compute determinants

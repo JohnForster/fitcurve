@@ -13,7 +13,7 @@ func verifyMatch(expected []Bezier, actual []Bezier, t *testing.T) {
 	for i, eb := range expected {
 		ab := actual[i]
 		if !match(ab, eb) {
-			t.Fatalf("Beziers didn't match. Expected %v, received %v", eb, ab)
+			t.Fatalf("Beziers with index %v didn't match. Expected %v, received %v", i, eb, ab)
 		}
 	}
 }
@@ -79,6 +79,36 @@ func TestMoreComplexPoints(t *testing.T) {
 	verifyMatch([]Bezier{expected}, actual, t)
 }
 
+func TestUnalignedPointsWithLowTolerance(t *testing.T) {
+	expected := []Bezier{
+		{
+			Point{0, 0},
+			Point{3.333333333333333, 3.333333333333333},
+			Point{5.285954792089683, 10},
+			Point{10, 10},
+		},
+		{
+			Point{10, 10},
+			Point{13.333333333333334, 10},
+			Point{7.6429773960448415, 2.3570226039551585},
+			Point{10, 0},
+		},
+		{
+			Point{10, 0},
+			Point{12.3570226, -2.3570226},
+			Point{16.66666667, 0},
+			Point{20, 0},
+		},
+	}
+
+	points := []Point{{0, 0}, {10, 10}, {10, 0}, {20, 0}}
+
+	actual := FitCurve(points, 1)
+
+	// panic("stop")
+	verifyMatch(expected, actual, t)
+}
+
 func TestNewtonRaphsonRootFind(t *testing.T) {
 	bezier := Bezier{
 		p0: Point{x: -106, y: 85},
@@ -92,6 +122,21 @@ func TestNewtonRaphsonRootFind(t *testing.T) {
 
 	expected := 0.982463387732839
 
+	actual := findNewtonRaphsonRoot(bezier, point, u)
+
+	if !close(expected, actual) {
+		diff := actual - expected
+		t.Fatalf("Not close enough. Expected %v, received %v. Diff %v", expected, actual, diff)
+	}
+}
+
+func TestNewtonRaphsonRootFind2(t *testing.T) {
+	bezier := Bezier{Point{244, 92}, Point{268.96666402690425, 100.32222134230143}, Point{279.14260825954716, 85}, Point{297, 85}}
+
+	// i: 1
+	point := Point{247, 93}
+	u := 0.05389562833843188
+	expected := 0.040747450391918696
 	actual := findNewtonRaphsonRoot(bezier, point, u)
 
 	if !close(expected, actual) {
