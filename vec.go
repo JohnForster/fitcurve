@@ -1,4 +1,4 @@
-package fitcurve
+package fitcurves
 
 import "math"
 

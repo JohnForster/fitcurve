@@ -1,4 +1,4 @@
-package fitcurve
+package fitcurves
 
 import (
 	"math"
@@ -46,7 +46,7 @@ func TestSingleBezier(t *testing.T) {
 	}
 
 	points := []Point{{x: 0, y: 0}, {x: 10, y: 10}, {x: 10, y: 0}, {x: 20, y: 0}}
-	actual := FitCurve(points, 50)
+	actual := FitCurves(points, 50)
 
 	verifyMatch([]Bezier{expected}, actual, t)
 }
@@ -60,7 +60,7 @@ func TestWithDuplicatePoints(t *testing.T) {
 	}
 	points := []Point{{x: 0, y: 0}, {x: 10, y: 10}, {x: 10, y: 0}, {x: 20, y: 0}, {x: 20, y: 0}}
 
-	actual := FitCurve(points, 50)
+	actual := FitCurves(points, 50)
 
 	verifyMatch([]Bezier{expected}, actual, t)
 }
@@ -74,7 +74,7 @@ func TestMoreComplexPoints(t *testing.T) {
 	}
 	points := []Point{{x: 244, y: 92}, {x: 247, y: 93}, {x: 251, y: 95}, {x: 254, y: 96}, {x: 258, y: 97}, {x: 261, y: 97}, {x: 265, y: 97}, {x: 267, y: 97}, {x: 270, y: 97}, {x: 273, y: 97}, {x: 281, y: 97}, {x: 284, y: 95}, {x: 286, y: 94}, {x: 289, y: 92}, {x: 291, y: 90}, {x: 292, y: 88}, {x: 294, y: 86}, {x: 295, y: 85}, {x: 296, y: 85}, {x: 297, y: 85}}
 
-	actual := FitCurve(points, 10)
+	actual := FitCurves(points, 10)
 
 	verifyMatch([]Bezier{expected}, actual, t)
 }
@@ -103,9 +103,8 @@ func TestUnalignedPointsWithLowTolerance(t *testing.T) {
 
 	points := []Point{{0, 0}, {10, 10}, {10, 0}, {20, 0}}
 
-	actual := FitCurve(points, 1)
+	actual := FitCurves(points, 1)
 
-	// panic("stop")
 	verifyMatch(expected, actual, t)
 }
 

@@ -1,4 +1,4 @@
-package fitcurve
+package fitcurves
 
 type Point struct {
 	x float64

@@ -1,6 +1,6 @@
-package fitcurve
+package fitcurves
 
-func FitCurve(points []Point, tolerance float64) []Bezier {
+func FitCurves(points []Point, tolerance float64) []Bezier {
 
 	// Filter duplicate points
 	points = dedupeSlice(points)
