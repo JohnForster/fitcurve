@@ -161,7 +161,7 @@ func generateBezier(points []Point, params []float64, lt Vec2, rt Vec2) Bezier {
 	)
 
 	bezier.p0 = firstPoint
-	bezier.p1 = lastPoint
+	bezier.p3 = lastPoint
 
 	// Compute the As
 	A = make([][]Vec2, len(params))
@@ -186,7 +186,7 @@ func generateBezier(points []Point, params []float64, lt Vec2, rt Vec2) Bezier {
 		C[1][0] += a[0].Dot(a[1])
 		C[1][1] += a[1].Dot(a[1])
 
-		straightLine := Bezier{p0: firstPoint, c1: firstPoint, c2: lastPoint, p1: lastPoint}
+		straightLine := Bezier{p0: firstPoint, p1: firstPoint, p2: lastPoint, p3: lastPoint}
 
 		// Difference between actual point location and a straight line at point u
 		tmp := points[i].Subtract(straightLine.Q(u))
@@ -218,11 +218,11 @@ func generateBezier(points []Point, params []float64, lt Vec2, rt Vec2) Bezier {
 		// Fall back to rough estimation:
 		//   c1 is 1/3 along the segment in the direction of the left tangent
 		//   c2 is 1/3 along the segment in the direction of the right tangent
-		bezier.c1 = firstPoint.Translate(lt.Mult(segLength / 3.0))
-		bezier.c2 = lastPoint.Translate(rt.Mult(segLength / 3.0))
+		bezier.p1 = firstPoint.Translate(lt.Mult(segLength / 3.0))
+		bezier.p2 = lastPoint.Translate(rt.Mult(segLength / 3.0))
 	} else {
-		bezier.c1 = firstPoint.Translate(lt.Mult(alpha_l))
-		bezier.c2 = lastPoint.Translate(rt.Mult(alpha_r))
+		bezier.p1 = firstPoint.Translate(lt.Mult(alpha_l))
+		bezier.p2 = lastPoint.Translate(rt.Mult(alpha_r))
 	}
 
 	return bezier

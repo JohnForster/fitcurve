@@ -28,21 +28,21 @@ func match(a Bezier, b Bezier) bool {
 	same := true
 	same = same && close(a.p0.x, b.p0.x)
 	same = same && close(a.p0.y, b.p0.y)
+	same = same && close(a.p3.x, b.p3.x)
+	same = same && close(a.p3.y, b.p3.y)
 	same = same && close(a.p1.x, b.p1.x)
 	same = same && close(a.p1.y, b.p1.y)
-	same = same && close(a.c1.x, b.c1.x)
-	same = same && close(a.c1.y, b.c1.y)
-	same = same && close(a.c2.x, b.c2.x)
-	same = same && close(a.c2.y, b.c2.y)
+	same = same && close(a.p2.x, b.p2.x)
+	same = same && close(a.p2.y, b.p2.y)
 	return same
 }
 
 func TestSingleBezier(t *testing.T) {
 	expected := Bezier{
 		p0: Point{x: 0, y: 0},
-		c1: Point{x: 20.27317402, y: 20.27317402},
-		c2: Point{x: -1.24665147, y: 0},
-		p1: Point{x: 20, y: 0},
+		p1: Point{x: 20.27317402, y: 20.27317402},
+		p2: Point{x: -1.24665147, y: 0},
+		p3: Point{x: 20, y: 0},
 	}
 
 	points := []Point{{x: 0, y: 0}, {x: 10, y: 10}, {x: 10, y: 0}, {x: 20, y: 0}}
@@ -54,9 +54,9 @@ func TestSingleBezier(t *testing.T) {
 func TestWithDuplicatePoints(t *testing.T) {
 	expected := Bezier{
 		p0: Point{x: 0, y: 0},
-		c1: Point{x: 20.27317402, y: 20.27317402},
-		c2: Point{x: -1.24665147, y: 0},
-		p1: Point{x: 20, y: 0},
+		p1: Point{x: 20.27317402, y: 20.27317402},
+		p2: Point{x: -1.24665147, y: 0},
+		p3: Point{x: 20, y: 0},
 	}
 	points := []Point{{x: 0, y: 0}, {x: 10, y: 10}, {x: 10, y: 0}, {x: 20, y: 0}, {x: 20, y: 0}}
 
@@ -68,9 +68,9 @@ func TestWithDuplicatePoints(t *testing.T) {
 func TestMoreComplexPoints(t *testing.T) {
 	expected := Bezier{
 		p0: Point{x: 244, y: 92},
-		c1: Point{x: 284.2727272958473, y: 105.42424243194908},
-		c2: Point{x: 287.98676736182495, y: 85},
-		p1: Point{x: 297, y: 85},
+		p1: Point{x: 284.2727272958473, y: 105.42424243194908},
+		p2: Point{x: 287.98676736182495, y: 85},
+		p3: Point{x: 297, y: 85},
 	}
 	points := []Point{{x: 244, y: 92}, {x: 247, y: 93}, {x: 251, y: 95}, {x: 254, y: 96}, {x: 258, y: 97}, {x: 261, y: 97}, {x: 265, y: 97}, {x: 267, y: 97}, {x: 270, y: 97}, {x: 273, y: 97}, {x: 281, y: 97}, {x: 284, y: 95}, {x: 286, y: 94}, {x: 289, y: 92}, {x: 291, y: 90}, {x: 292, y: 88}, {x: 294, y: 86}, {x: 295, y: 85}, {x: 296, y: 85}, {x: 297, y: 85}}
 
@@ -111,9 +111,9 @@ func TestUnalignedPointsWithLowTolerance(t *testing.T) {
 func TestNewtonRaphsonRootFind(t *testing.T) {
 	bezier := Bezier{
 		p0: Point{x: -106, y: 85},
-		c1: Point{x: -85.27347011446706, y: 68.22138056885429},
-		c2: Point{x: -167.14381916835873, y: 103.85618083164127},
-		p1: Point{x: -186, y: 85},
+		p1: Point{x: -85.27347011446706, y: 68.22138056885429},
+		p2: Point{x: -167.14381916835873, y: 103.85618083164127},
+		p3: Point{x: -186, y: 85},
 	}
 
 	point := Point{x: -185.0, y: 86.0}
