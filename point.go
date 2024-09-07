@@ -5,6 +5,10 @@ type Point struct {
 	y float64
 }
 
+func NewPoint(x, y float64) Point {
+	return Point{x, y}
+}
+
 func (p Point) Subtract(p1 Point) Vec2 {
 	return Vec2{
 		x: p.x - p1.x,
