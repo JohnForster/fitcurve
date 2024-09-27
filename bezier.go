@@ -1,10 +1,10 @@
 package fitcurves
 
 type Bezier struct {
-	p0 Point
-	p1 Point
-	p2 Point
-	p3 Point
+	P0 Point
+	P1 Point
+	P2 Point
+	P3 Point
 }
 
 // Evaluates cubic bezier at parameter t
@@ -12,15 +12,15 @@ func (b Bezier) Q(t float64) Point {
 
 	tx := 1.0 - t
 
-	x := ((b.p0.x * tx * tx * tx) +
-		(b.p1.x * 3 * tx * tx * t)) +
-		((b.p2.x * 3 * tx * t * t) +
-			(b.p3.x * t * t * t))
+	x := ((b.P0.X * tx * tx * tx) +
+		(b.P1.X * 3 * tx * tx * t)) +
+		((b.P2.X * 3 * tx * t * t) +
+			(b.P3.X * t * t * t))
 
-	y := ((b.p0.y * tx * tx * tx) +
-		(b.p1.y * 3 * tx * tx * t)) +
-		((b.p2.y * 3 * tx * t * t) +
-			(b.p3.y * t * t * t))
+	y := ((b.P0.Y * tx * tx * tx) +
+		(b.P1.Y * 3 * tx * tx * t)) +
+		((b.P2.Y * 3 * tx * t * t) +
+			(b.P3.Y * t * t * t))
 
 	return Point{x, y}
 }
@@ -28,26 +28,26 @@ func (b Bezier) Q(t float64) Point {
 // Evaluates cubic bezier first derivative at t
 func (b Bezier) QPrime(t float64) Point {
 	tx := 1 - t
-	d1 := b.p1.Subtract(b.p0)
-	d2 := b.p2.Subtract(b.p1)
-	d3 := b.p3.Subtract(b.p2)
-	x := (d1.x * 3 * tx * tx) +
-		(d2.x * 6 * tx * t) +
-		(d3.x * 3 * t * t)
-	y := (d1.y * 3 * tx * tx) +
-		(d2.y * 6 * tx * t) +
-		(d3.y * 3 * t * t)
+	d1 := b.P1.Subtract(b.P0)
+	d2 := b.P2.Subtract(b.P1)
+	d3 := b.P3.Subtract(b.P2)
+	x := (d1.X * 3 * tx * tx) +
+		(d2.X * 6 * tx * t) +
+		(d3.X * 3 * t * t)
+	y := (d1.Y * 3 * tx * tx) +
+		(d2.Y * 6 * tx * t) +
+		(d3.Y * 3 * t * t)
 	return Point{x, y}
 }
 
 func (b Bezier) QPrimePrime(t float64) Point {
 	tx := 1 - t
 
-	x := ((b.p0.x + (b.p2.x - (b.p1.x * 2))) * (6 * tx)) +
-		((b.p1.x + (b.p3.x - (b.p2.x * 2))) * (6 * t))
+	x := ((b.P0.X + (b.P2.X - (b.P1.X * 2))) * (6 * tx)) +
+		((b.P1.X + (b.P3.X - (b.P2.X * 2))) * (6 * t))
 
-	y := ((b.p0.y + (b.p2.y - (b.p1.y * 2))) * (6 * tx)) +
-		((b.p1.y + (b.p3.y - (b.p2.y * 2))) * (6 * t))
+	y := ((b.P0.Y + (b.P2.Y - (b.P1.Y * 2))) * (6 * tx)) +
+		((b.P1.Y + (b.P3.Y - (b.P2.Y * 2))) * (6 * t))
 
 	return Point{x, y}
 }

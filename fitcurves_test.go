@@ -26,26 +26,26 @@ func close(a float64, b float64) bool {
 
 func match(a Bezier, b Bezier) bool {
 	same := true
-	same = same && close(a.p0.x, b.p0.x)
-	same = same && close(a.p0.y, b.p0.y)
-	same = same && close(a.p3.x, b.p3.x)
-	same = same && close(a.p3.y, b.p3.y)
-	same = same && close(a.p1.x, b.p1.x)
-	same = same && close(a.p1.y, b.p1.y)
-	same = same && close(a.p2.x, b.p2.x)
-	same = same && close(a.p2.y, b.p2.y)
+	same = same && close(a.P0.X, b.P0.X)
+	same = same && close(a.P0.Y, b.P0.Y)
+	same = same && close(a.P3.X, b.P3.X)
+	same = same && close(a.P3.Y, b.P3.Y)
+	same = same && close(a.P1.X, b.P1.X)
+	same = same && close(a.P1.Y, b.P1.Y)
+	same = same && close(a.P2.X, b.P2.X)
+	same = same && close(a.P2.Y, b.P2.Y)
 	return same
 }
 
 func TestSingleBezier(t *testing.T) {
 	expected := Bezier{
-		p0: Point{x: 0, y: 0},
-		p1: Point{x: 20.27317402, y: 20.27317402},
-		p2: Point{x: -1.24665147, y: 0},
-		p3: Point{x: 20, y: 0},
+		P0: Point{X: 0, Y: 0},
+		P1: Point{X: 20.27317402, Y: 20.27317402},
+		P2: Point{X: -1.24665147, Y: 0},
+		P3: Point{X: 20, Y: 0},
 	}
 
-	points := []Point{{x: 0, y: 0}, {x: 10, y: 10}, {x: 10, y: 0}, {x: 20, y: 0}}
+	points := []Point{{X: 0, Y: 0}, {X: 10, Y: 10}, {X: 10, Y: 0}, {X: 20, Y: 0}}
 	actual := FitCurves(points, 50)
 
 	verifyMatch([]Bezier{expected}, actual, t)
@@ -53,12 +53,12 @@ func TestSingleBezier(t *testing.T) {
 
 func TestWithDuplicatePoints(t *testing.T) {
 	expected := Bezier{
-		p0: Point{x: 0, y: 0},
-		p1: Point{x: 20.27317402, y: 20.27317402},
-		p2: Point{x: -1.24665147, y: 0},
-		p3: Point{x: 20, y: 0},
+		P0: Point{X: 0, Y: 0},
+		P1: Point{X: 20.27317402, Y: 20.27317402},
+		P2: Point{X: -1.24665147, Y: 0},
+		P3: Point{X: 20, Y: 0},
 	}
-	points := []Point{{x: 0, y: 0}, {x: 10, y: 10}, {x: 10, y: 0}, {x: 20, y: 0}, {x: 20, y: 0}}
+	points := []Point{{X: 0, Y: 0}, {X: 10, Y: 10}, {X: 10, Y: 0}, {X: 20, Y: 0}, {X: 20, Y: 0}}
 
 	actual := FitCurves(points, 50)
 
@@ -67,12 +67,12 @@ func TestWithDuplicatePoints(t *testing.T) {
 
 func TestMoreComplexPoints(t *testing.T) {
 	expected := Bezier{
-		p0: Point{x: 244, y: 92},
-		p1: Point{x: 284.2727272958473, y: 105.42424243194908},
-		p2: Point{x: 287.98676736182495, y: 85},
-		p3: Point{x: 297, y: 85},
+		P0: Point{X: 244, Y: 92},
+		P1: Point{X: 284.2727272958473, Y: 105.42424243194908},
+		P2: Point{X: 287.98676736182495, Y: 85},
+		P3: Point{X: 297, Y: 85},
 	}
-	points := []Point{{x: 244, y: 92}, {x: 247, y: 93}, {x: 251, y: 95}, {x: 254, y: 96}, {x: 258, y: 97}, {x: 261, y: 97}, {x: 265, y: 97}, {x: 267, y: 97}, {x: 270, y: 97}, {x: 273, y: 97}, {x: 281, y: 97}, {x: 284, y: 95}, {x: 286, y: 94}, {x: 289, y: 92}, {x: 291, y: 90}, {x: 292, y: 88}, {x: 294, y: 86}, {x: 295, y: 85}, {x: 296, y: 85}, {x: 297, y: 85}}
+	points := []Point{{X: 244, Y: 92}, {X: 247, Y: 93}, {X: 251, Y: 95}, {X: 254, Y: 96}, {X: 258, Y: 97}, {X: 261, Y: 97}, {X: 265, Y: 97}, {X: 267, Y: 97}, {X: 270, Y: 97}, {X: 273, Y: 97}, {X: 281, Y: 97}, {X: 284, Y: 95}, {X: 286, Y: 94}, {X: 289, Y: 92}, {X: 291, Y: 90}, {X: 292, Y: 88}, {X: 294, Y: 86}, {X: 295, Y: 85}, {X: 296, Y: 85}, {X: 297, Y: 85}}
 
 	actual := FitCurves(points, 10)
 
@@ -110,13 +110,13 @@ func TestUnalignedPointsWithLowTolerance(t *testing.T) {
 
 func TestNewtonRaphsonRootFind(t *testing.T) {
 	bezier := Bezier{
-		p0: Point{x: -106, y: 85},
-		p1: Point{x: -85.27347011446706, y: 68.22138056885429},
-		p2: Point{x: -167.14381916835873, y: 103.85618083164127},
-		p3: Point{x: -186, y: 85},
+		P0: Point{X: -106, Y: 85},
+		P1: Point{X: -85.27347011446706, Y: 68.22138056885429},
+		P2: Point{X: -167.14381916835873, Y: 103.85618083164127},
+		P3: Point{X: -186, Y: 85},
 	}
 
-	point := Point{x: -185.0, y: 86.0}
+	point := Point{X: -185.0, Y: 86.0}
 	u := 0.9871784373992284
 
 	expected := 0.982463387732839

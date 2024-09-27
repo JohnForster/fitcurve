@@ -93,10 +93,10 @@ func fitCubic(points []Point, leftTangent Vec2, rightTangent Vec2, targetError f
 	//However, this won't work if they're the same point, because the line we
 	//want to use as a tangent would be 0. Instead, we calculate the line from
 	//that "double-point" to the center point, and use its tangent.
-	if centerVector.x == 0 && centerVector.y == 0 {
+	if centerVector.X == 0 && centerVector.Y == 0 {
 		//[x,y] -> [-y,x]: http://stackoverflow.com/a/4780141/1869660
 		centerVector = points[splitPoint-1].Subtract(points[splitPoint])
-		centerVector = Vec2{x: -centerVector.y, y: centerVector.x}
+		centerVector = Vec2{X: -centerVector.Y, Y: centerVector.X}
 	}
 
 	// To and From point in opposite directions
@@ -160,8 +160,8 @@ func generateBezier(points []Point, params []float64, lt Vec2, rt Vec2) Bezier {
 		lastPoint  = points[len(points)-1]
 	)
 
-	bezier.p0 = firstPoint
-	bezier.p3 = lastPoint
+	bezier.P0 = firstPoint
+	bezier.P3 = lastPoint
 
 	// Compute the As
 	A = make([][]Vec2, len(params))
@@ -186,7 +186,7 @@ func generateBezier(points []Point, params []float64, lt Vec2, rt Vec2) Bezier {
 		C[1][0] += a[0].Dot(a[1])
 		C[1][1] += a[1].Dot(a[1])
 
-		straightLine := Bezier{p0: firstPoint, p1: firstPoint, p2: lastPoint, p3: lastPoint}
+		straightLine := Bezier{P0: firstPoint, P1: firstPoint, P2: lastPoint, P3: lastPoint}
 
 		// Difference between actual point location and a straight line at point u
 		tmp := points[i].Subtract(straightLine.Q(u))
@@ -218,11 +218,11 @@ func generateBezier(points []Point, params []float64, lt Vec2, rt Vec2) Bezier {
 		// Fall back to rough estimation:
 		//   c1 is 1/3 along the segment in the direction of the left tangent
 		//   c2 is 1/3 along the segment in the direction of the right tangent
-		bezier.p1 = firstPoint.Translate(lt.Mult(segLength / 3.0))
-		bezier.p2 = lastPoint.Translate(rt.Mult(segLength / 3.0))
+		bezier.P1 = firstPoint.Translate(lt.Mult(segLength / 3.0))
+		bezier.P2 = lastPoint.Translate(rt.Mult(segLength / 3.0))
 	} else {
-		bezier.p1 = firstPoint.Translate(lt.Mult(alpha_l))
-		bezier.p2 = lastPoint.Translate(rt.Mult(alpha_r))
+		bezier.P1 = firstPoint.Translate(lt.Mult(alpha_l))
+		bezier.P2 = lastPoint.Translate(rt.Mult(alpha_r))
 	}
 
 	return bezier
@@ -241,7 +241,7 @@ func computeMaxError(points []Point, bezier Bezier, params []float64) (float64, 
 		v := bezier.Q(t).Subtract(point)
 
 		// Just finding max, so no need to sqrt
-		dist := v.x*v.x + v.y*v.y
+		dist := v.X*v.X + v.Y*v.Y
 
 		if dist > maxDist {
 			maxDist = dist
@@ -255,7 +255,7 @@ func computeMaxError(points []Point, bezier Bezier, params []float64) (float64, 
 
 func mapTtoRelativeDistances(bezier Bezier, n int) []float64 {
 	totalLength := 0.0
-	prevBt := bezier.p0
+	prevBt := bezier.P0
 	dists := []float64{0.0}
 	for i := 1; i <= n; i++ {
 		t := float64(i) / float64(n)
@@ -362,7 +362,7 @@ func findNewtonRaphsonRoot(bezier Bezier, Point Point, u float64) float64 {
 	d := bezier.Q(u).Subtract(Point)
 
 	numerator := d.Dot(Q1u.Vec())
-	denominator := (Q1u.x*Q1u.x + Q1u.y*Q1u.y) + 2*(d.x*Q2u.x+d.y*Q2u.y)
+	denominator := (Q1u.X*Q1u.X + Q1u.Y*Q1u.Y) + 2*(d.X*Q2u.X+d.Y*Q2u.Y)
 
 	if denominator == 0 {
 		return u
